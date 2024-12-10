@@ -164,8 +164,8 @@ class KlipperScreenConfig:
                     'show_heater_power', "show_scroll_steppers", "auto_open_extrude"
                 )
                 strs = (
-                    'default_printer', 'timezone', 'language', 'print_sort_dir', 'theme', 'screen_blanking_printing', 
-                    'font_size', 'print_estimate_method', 'screen_blanking', "screen_on_devices", "screen_off_devices", 
+                    'default_printer', 'timezone', 'language', 'print_sort_dir', 'theme', 'screen_blanking_printing',
+                    'font_size', 'print_estimate_method', 'screen_blanking', "screen_on_devices", "screen_off_devices",
                     'print_view',
                 )
                 numbers = (
@@ -256,7 +256,7 @@ class KlipperScreenConfig:
                         if len(parts) >= 3:
                             timezones.append(parts[2])
         return timezones
-    
+
     def set_timezone(self, timezone):
         import subprocess
         subprocess.run(['sudo', 'timedatectl', 'set-timezone', timezone])

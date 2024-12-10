@@ -108,8 +108,8 @@ class Panel(ScreenPanel):
 #            scale_grid.attach(button, 0, idx, 1, 1)
             min_max_switch = Gtk.Switch()
             min_max_switch.connect("state-set", self.on_switch_state_set)
-            scale_grid.attach(min_max_switch, 4 , 5 , 1, 1)
-            scale_grid.attach(scale, 0, 3 , 4, 5)
+            scale_grid.attach(min_max_switch, 4, 5, 1, 1)
+            scale_grid.attach(scale, 0, 3, 4, 5)
         grid.attach(scale_grid, 3, 0, 5, 1)
 
         columns = 3 if self._screen.vertical_mode else 2
