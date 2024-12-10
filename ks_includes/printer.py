@@ -29,7 +29,7 @@ class Printer:
         self.temp_devices = self.sensors = None
         self.system_info = {}
         self.warnings = []
-
+        self.status = None
     def reinit(self, printer_info, data):
         self.config = data['configfile']['config']
         self.data = data

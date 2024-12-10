@@ -164,7 +164,7 @@ class KlipperScreenConfig:
                     'show_heater_power', "show_scroll_steppers", "auto_open_extrude"
                 )
                 strs = (
-                    'default_printer', 'language', 'print_sort_dir', 'theme', 'screen_blanking_printing', 'font_size',
+                    'default_printer', 'timezone','language', 'print_sort_dir', 'theme', 'screen_blanking_printing', 'font_size',
                     'print_estimate_method', 'screen_blanking', "screen_on_devices", "screen_off_devices", 'print_view',
                 )
                 numbers = (
@@ -243,10 +243,34 @@ class KlipperScreenConfig:
 
     def get_errors(self):
         return "".join(f'{error}\n\n' for error in self.errors)
+        
+    def get_timezones(self):
+        timezones = []
+        zone_tab_path = '/usr/share/zoneinfo/zone.tab'
+        if os.path.exists(zone_tab_path):
+            with open(zone_tab_path, 'r') as f:
+                for line in f:
+                    if line.strip() and not line.startswith('#'):
+                        parts = line.split('\t')
+                        if len(parts) >= 3:
+                            timezones.append(parts[2])
+        return timezones
+    
+    def set_timezone(self, timezone):
+        import subprocess
+        subprocess.run(['sudo', 'timedatectl', 'set-timezone', timezone])
 
     def _create_configurable_options(self, screen):
+        timezones = self.get_timezones()
 
         self.configurable_options = [
+            {"timezone": {
+                "section": "main", "name": _("Timezones"), "type": "dropdown",
+                "tooltip": _("Select your timezone"),
+                "value": timezones[0] if timezones else "UTC",
+                "callback": self.set_timezone,
+                "options": [{"name": tz, "value": tz} for tz in timezones]
+            }},
             {"theme": {
                 "section": "main", "name": _("Icon Theme"), "type": "dropdown",
                 "tooltip": _("Changes how the interface looks"),

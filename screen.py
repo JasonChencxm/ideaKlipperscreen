@@ -606,6 +606,7 @@ class KlipperScreen(Gtk.Window):
             use_screensaver = self._config.get_main_config().get('screen_blanking') != "off"
         if use_screensaver:
             self.screensaver_timeout = GLib.timeout_add_seconds(self.blanking_time, self.show_screensaver)
+        os.system("xset -display :0 dpms force on")
 
     def show_screensaver(self):
         logging.debug("Showing Screensaver")
@@ -666,6 +667,7 @@ class KlipperScreen(Gtk.Window):
         elif state != functions.DPMS_State.On:
             if self.screensaver is None:
                 self.show_screensaver()
+        os.system("xset -display :0 dpms force on")
         return True
 
     def wake_screen(self):

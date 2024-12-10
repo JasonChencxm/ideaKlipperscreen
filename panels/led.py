@@ -11,7 +11,6 @@ from ks_includes.screen_panel import ScreenPanel
 class Panel(ScreenPanel):
 
     def __init__(self, screen, title):
-        title = title or _("Leds")
         super().__init__(screen, title)
         self.da_size = self._gtk.img_scale * 2
         self.preview = Gtk.DrawingArea(width_request=self.da_size, height_request=self.da_size)
@@ -67,7 +66,7 @@ class Panel(ScreenPanel):
             name = led.split()[1] if len(led.split()) > 1 else led
             button = self._gtk.Button(None, name.upper(), style=f"color{(i % 4) + 1}")
             button.connect("clicked", self.open_selector, led)
-            grid.attach(button, (i % columns), int(i / columns), 1, 1)
+            #grid.attach(button, (i % columns), int(i / columns), 1, 1)
         scroll = self._gtk.ScrolledWindow()
         scroll.add(grid)
         return scroll
@@ -101,19 +100,23 @@ class Panel(ScreenPanel):
             scale.set_digits(0)
             scale.set_hexpand(True)
             scale.set_has_origin(True)
+            scale.set_draw_value(False)
             scale.get_style_context().add_class("fan_slider")
             scale.connect("button-release-event", self.apply_scales)
             scale.connect("value_changed", self.update_preview)
             self.scales[idx] = scale
-            scale_grid.attach(button, 0, idx, 1, 1)
-            scale_grid.attach(scale, 1, idx, 3, 1)
-        grid.attach(scale_grid, 0, 0, 3, 1)
+            #scale_grid.attach(button, 0, idx, 1, 1)
+            min_max_switch = Gtk.Switch()
+            min_max_switch.connect("state-set", self.on_switch_state_set)
+            scale_grid.attach(min_max_switch, 4 , 5 , 1, 1)
+            scale_grid.attach(scale, 0, 3 , 4, 5)
+        grid.attach(scale_grid, 3, 0, 5, 1)
 
         columns = 3 if self._screen.vertical_mode else 2
         data_misc = self._screen.apiclient.send_request(
             "server/database/item?namespace=mainsail&key=miscellaneous.entries")
         if data_misc:
-            presets_data = data_misc['value'][next(iter(data_misc["value"]))]['presets']
+            presets_data = data_misc['result']['value'][next(iter(data_misc["result"]["value"]))]['presets']
             if presets_data:
                 self.presets.update(self.parse_presets(presets_data))
         for i, key in enumerate(self.presets):
@@ -123,15 +126,15 @@ class Panel(ScreenPanel):
             button = self._gtk.Button()
             button.set_image(preview)
             button.connect("clicked", self.apply_preset, self.presets[key])
-            self.preset_list.attach(button, i % columns, int(i / columns) + 1, 1, 1)
+            #self.preset_list.attach(button, i % columns, int(i / columns) + 1, 1, 1)
 
         scroll = self._gtk.ScrolledWindow()
         scroll.add(self.preset_list)
-        preview_box = Gtk.Box(homogeneous=True)
-        preview_box.add(self.preview_label)
-        preview_box.add(self.preview)
+        #preview_box = Gtk.Box(homogeneous=True)
+        #preview_box.add(self.preview_label)
+        #preview_box.add(self.preview)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        box.add(preview_box)
+        #box.add(preview_box)
         box.add(scroll)
         if self._screen.vertical_mode:
             grid.attach(box, 0, 1, 3, 1)
@@ -188,6 +191,18 @@ class Panel(ScreenPanel):
         name = self.current_led.split()[1] if len(self.current_led.split()) > 1 else self.current_led
         self._screen._send_action(None, "printer.gcode.script",
                                   {"script": KlippyGcodes.set_led_color(name, color_data)})
+    
+    def on_switch_state_set(self, widget, state):
+        if state:
+            # 将亮度设置为最大
+            color_data = [1,1,1,1]
+            self.update_scales(color_data)
+            self.apply_scales()
+        else:
+            # 将亮度设置为最小
+            color_data = [0,0,0,0]
+            self.update_scales(color_data)
+            self.apply_scales()
 
     @staticmethod
     def parse_presets(presets_data) -> {}:

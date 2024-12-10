@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="301" height="301" viewBox="0 0 301 301" fill="none">
+<rect x="0" y="0" width="0" height="0" fill="rgba(249, 249, 249, 1)" />
+<g  clip-path="url(#clip-path-0_1)">
+<path  transform="translate(0.5, 0.5)"   fill="#000000" fill-opacity="0" d="M0 300L300 300L300 0L0 0L0 300Z">
+</path>
+<circle cx="134" cy="170" r="125.5" stroke="rgba(255, 255, 255, 1)" stroke-width="15"      fill="#FFFFFF" fill-opacity="0">
+</circle>
+<circle cx="58.5" cy="169.5" r="25"   fill="#FFFFFF" >
+</circle>
+<circle cx="208.5" cy="169.5" r="25"   fill="#FFFFFF" >
+</circle>
+<circle cx="133.5" cy="169.5" r="25"   fill="#FFFFFF" >
+</circle>
+<path   transform="translate(0.5, 0.5)" stroke="rgba(255, 255, 255, 0)" stroke-width="1"    d="">
+</path>
+</g>
+<defs>
+<clipPath id="clip-path-0_1">
+<path d="M0 0L0 301L301 301L301 0L0 0Z" fill="white"/>
+</clipPath>
+</defs>
+</svg>

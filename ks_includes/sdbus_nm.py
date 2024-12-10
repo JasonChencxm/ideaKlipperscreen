@@ -175,24 +175,24 @@ class SdbusNm:
         networks = []
         if self.wlan_device:
             all_aps = [AccessPoint(result) for result in self.wlan_device.access_points]
-            networks.extend(
-                {
-                    "SSID": ap.ssid.decode("utf-8"),
-                    "known": self.is_known(ap.ssid.decode("utf-8")),
-                    "security": get_encryption(
-                        ap.rsn_flags or ap.wpa_flags or ap.flags
-                    ),
-                    "frequency": WifiChannels(ap.frequency)[0],
-                    "channel": WifiChannels(ap.frequency)[1],
-                    "signal_level": ap.strength,
-                    "max_bitrate": ap.max_bitrate,
-                    "BSSID": ap.hw_address,
-                }
-                for ap in all_aps
-                if ap.ssid
-            )
+            added_ssids = set()
+            for ap in all_aps:
+                if ap.ssid and ap.ssid.decode("utf-8") not in added_ssids:
+                    network_info = {
+                        "SSID": ap.ssid.decode("utf-8"),
+                        "known": self.is_known(ap.ssid.decode("utf-8")),
+                        "security": get_encryption(ap.rsn_flags or ap.wpa_flags or ap.flags),
+                        "frequency": WifiChannels(ap.frequency)[0],
+                        "channel": WifiChannels(ap.frequency)[1],
+                        "signal_level": ap.strength,
+                        "max_bitrate": ap.max_bitrate,
+                        "BSSID": ap.hw_address,
+                    }
+                    networks.append(network_info)
+                    added_ssids.add(ap.ssid.decode("utf-8"))
             return sorted(networks, key=lambda i: i["signal_level"], reverse=True)
         return networks
+
 
     def get_bssid_from_ssid(self, ssid):
         return next(net["BSSID"] for net in self.get_networks() if ssid == net["SSID"])
@@ -219,8 +219,9 @@ class SdbusNm:
             None,
         )
 
-    def add_network(self, ssid, psk):
+    def add_network(self, ssid, psk, eap_method, identity="", phase2=None):
         security_type = self.get_security_type(ssid)
+        logging.debug(f"Adding network of type: {security_type}")
         if security_type is None:
             return {"error": "network_not_found", "message": _("Network not found")}
 
@@ -268,11 +269,13 @@ class SdbusNm:
             }
         elif "802.1x" in security_type:
             properties["802-11-wireless-security"] = {
-                "key-mgmt": ("s", "ieee8021x"),
-                "wep-key-type": ("u", 2),
-                "wep-key0": ("s", psk),
-                "auth-alg": ("s", "shared"),
+                "key-mgmt": ("s", "wpa-eap"),
+                "eap": ("as", [eap_method]),
+                "identity": ("s", identity),
+                "password": ("s", psk),
             }
+            if phase2:
+                properties["802-11-wireless-security"]["phase2_auth"] = ("s", phase2)
         elif "WEP" in security_type:
             properties["802-11-wireless-security"] = {
                 "key-mgmt": ("s", "none"),
