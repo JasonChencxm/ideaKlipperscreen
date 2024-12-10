@@ -66,7 +66,7 @@ class Panel(ScreenPanel):
             name = led.split()[1] if len(led.split()) > 1 else led
             button = self._gtk.Button(None, name.upper(), style=f"color{(i % 4) + 1}")
             button.connect("clicked", self.open_selector, led)
-            #grid.attach(button, (i % columns), int(i / columns), 1, 1)
+#            grid.attach(button, (i % columns), int(i / columns), 1, 1)
         scroll = self._gtk.ScrolledWindow()
         scroll.add(grid)
         return scroll
@@ -105,7 +105,7 @@ class Panel(ScreenPanel):
             scale.connect("button-release-event", self.apply_scales)
             scale.connect("value_changed", self.update_preview)
             self.scales[idx] = scale
-            #scale_grid.attach(button, 0, idx, 1, 1)
+#            scale_grid.attach(button, 0, idx, 1, 1)
             min_max_switch = Gtk.Switch()
             min_max_switch.connect("state-set", self.on_switch_state_set)
             scale_grid.attach(min_max_switch, 4 , 5 , 1, 1)
@@ -126,15 +126,15 @@ class Panel(ScreenPanel):
             button = self._gtk.Button()
             button.set_image(preview)
             button.connect("clicked", self.apply_preset, self.presets[key])
-            #self.preset_list.attach(button, i % columns, int(i / columns) + 1, 1, 1)
+#            self.preset_list.attach(button, i % columns, int(i / columns) + 1, 1, 1)
 
         scroll = self._gtk.ScrolledWindow()
         scroll.add(self.preset_list)
-        #preview_box = Gtk.Box(homogeneous=True)
-        #preview_box.add(self.preview_label)
-        #preview_box.add(self.preview)
+#        preview_box = Gtk.Box(homogeneous=True)
+#        preview_box.add(self.preview_label)
+#        preview_box.add(self.preview)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        #box.add(preview_box)
+#        box.add(preview_box)
         box.add(scroll)
         if self._screen.vertical_mode:
             grid.attach(box, 0, 1, 3, 1)
@@ -191,16 +191,16 @@ class Panel(ScreenPanel):
         name = self.current_led.split()[1] if len(self.current_led.split()) > 1 else self.current_led
         self._screen._send_action(None, "printer.gcode.script",
                                   {"script": KlippyGcodes.set_led_color(name, color_data)})
-    
+
     def on_switch_state_set(self, widget, state):
         if state:
             # 将亮度设置为最大
-            color_data = [1,1,1,1]
+            color_data = [1, 1, 1, 1]
             self.update_scales(color_data)
             self.apply_scales()
         else:
             # 将亮度设置为最小
-            color_data = [0,0,0,0]
+            color_data = [0, 0, 0, 0]
             self.update_scales(color_data)
             self.apply_scales()
 

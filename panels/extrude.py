@@ -37,17 +37,17 @@ class Panel(ScreenPanel):
         self.speed = int(self.speeds[1])
         self.buttons = {
             'extrude': self._gtk.Button("extrude", _("Extrude"), "color4"),
-            #'load': self._gtk.Button("arrow-down", _("Load"), "color3"),
-            #'unload': self._gtk.Button("arrow-up", _("Unload"), "color2"),
+#            'load': self._gtk.Button("arrow-down", _("Load"), "color3"),
+#            'unload': self._gtk.Button("arrow-up", _("Unload"), "color2"),
             'retract': self._gtk.Button("retract", _("Retract"), "color1"),
             'temperature': self._gtk.Button("heat-up", _("Temperature"), "color4"),
             'spoolman': self._gtk.Button("spoolman", "Spoolman", "color3"),
-            #'pressure': self._gtk.Button("settings", _("Pressure Advance"), "color2"),
+#            'pressure': self._gtk.Button("settings", _("Pressure Advance"), "color2"),
             'retraction': self._gtk.Button("settings", _("Retraction"), "color1")
         }
         self.buttons['extrude'].connect("clicked", self.check_min_temp, "extrude", "+")
-        #self.buttons['load'].connect("clicked", self.check_min_temp, "load_unload", "+")
-        #self.buttons['unload'].connect("clicked", self.check_min_temp, "load_unload", "-")
+#        self.buttons['load'].connect("clicked", self.check_min_temp, "load_unload", "+")
+#        self.buttons['unload'].connect("clicked", self.check_min_temp, "load_unload", "-")
         self.buttons['retract'].connect("clicked", self.check_min_temp, "extrude", "-")
         self.buttons['temperature'].connect("clicked", self.menu_item_clicked, {
             "panel": "temperature"
@@ -176,10 +176,10 @@ class Panel(ScreenPanel):
         if self._screen.vertical_mode:
             grid.attach(self.buttons['extrude'], 0, 1, 2, 1)
             grid.attach(self.buttons['retract'], 2, 1, 2, 1)
-            #grid.attach(self.buttons['load'], 0, 2, 2, 1)
-            #grid.attach(self.buttons['unload'], 2, 2, 2, 1)
+#            grid.attach(self.buttons['load'], 0, 2, 2, 1)
+#            grid.attach(self.buttons['unload'], 2, 2, 2, 1)
             settings_box = Gtk.Box(homogeneous=True)
-            #settings_box.add(self.buttons['pressure'])
+#            settings_box.add(self.buttons['pressure'])
             if self._printer.get_config_section("firmware_retraction"):
                 settings_box.add(self.buttons['retraction'])
             grid.attach(settings_box, 0, 3, 4, 1)
@@ -188,8 +188,8 @@ class Panel(ScreenPanel):
             grid.attach(sensors, 0, 6, 4, 1)
         else:
             grid.attach(self.buttons['extrude'], 0, 2, 2, 1)
-            #grid.attach(self.buttons['load'], 1, 2, 1, 1)
-            #grid.attach(self.buttons['unload'], 2, 2, 1, 1)
+#            grid.attach(self.buttons['load'], 1, 2, 1, 1)
+#            grid.attach(self.buttons['unload'], 2, 2, 1, 1)
             grid.attach(self.buttons['retract'], 2, 2, 2, 1)
             grid.attach(distbox, 0, 3, 2, 1)
             grid.attach(speedbox, 2, 3, 2, 1)
@@ -289,13 +289,12 @@ class Panel(ScreenPanel):
         target = None
         target = self._printer.get_stat(self.current_extruder, "target")
         temp = self._printer.get_stat(self.current_extruder, "temperature")
-        if target is not None and target != 0  and temp >= target - 15:
+        if target is not None and target != 0 and temp >= target - 15:
             self._screen._ws.klippy.gcode_script(KlippyGcodes.EXTRUDE_REL)
             self._screen._send_action(widget, "printer.gcode.script",
-                                  {"script": f"G1 E{direction}{self.distance} F{self.speed * 60}"})
+                                      {"script": f"G1 E{direction}{self.distance} F{self.speed * 60}"})
         else:
             self._screen.show_popup_message(_("temperature Not enough"))
-
 
     def load_unload(self, widget, direction):
         if direction == "-":

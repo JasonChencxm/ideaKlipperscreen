@@ -193,7 +193,6 @@ class SdbusNm:
             return sorted(networks, key=lambda i: i["signal_level"], reverse=True)
         return networks
 
-
     def get_bssid_from_ssid(self, ssid):
         return next(net["BSSID"] for net in self.get_networks() if ssid == net["SSID"])
 

@@ -164,8 +164,9 @@ class KlipperScreenConfig:
                     'show_heater_power', "show_scroll_steppers", "auto_open_extrude"
                 )
                 strs = (
-                    'default_printer', 'timezone','language', 'print_sort_dir', 'theme', 'screen_blanking_printing', 'font_size',
-                    'print_estimate_method', 'screen_blanking', "screen_on_devices", "screen_off_devices", 'print_view',
+                    'default_printer', 'timezone', 'language', 'print_sort_dir', 'theme', 'screen_blanking_printing', 
+                    'font_size', 'print_estimate_method', 'screen_blanking', "screen_on_devices", "screen_off_devices", 
+                    'print_view',
                 )
                 numbers = (
                     'job_complete_timeout', 'job_error_timeout', 'move_speed_xy', 'move_speed_z',
@@ -243,7 +244,7 @@ class KlipperScreenConfig:
 
     def get_errors(self):
         return "".join(f'{error}\n\n' for error in self.errors)
-        
+
     def get_timezones(self):
         timezones = []
         zone_tab_path = '/usr/share/zoneinfo/zone.tab'
