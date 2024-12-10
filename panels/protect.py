@@ -15,6 +15,7 @@ home = os.path.expanduser("~/")
 printer_data_config = os.path.join(home, "printer_data", "config")
 protection_config = os.path.join(printer_data_config, "protect.conf")
 
+
 class Panel(ScreenPanel):
     def __init__(self, screen, title):
         title = title or _("Protect")
@@ -42,7 +43,7 @@ class Panel(ScreenPanel):
 
         self.enter_interface()
         self.content.add(self.grid)
-        
+    
     def on_restart_button_clicked(self, button):
         try:
             os.system("sudo systemctl reboot -i")
