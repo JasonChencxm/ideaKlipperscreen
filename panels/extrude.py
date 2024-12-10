@@ -37,12 +37,12 @@ class Panel(ScreenPanel):
         self.speed = int(self.speeds[1])
         self.buttons = {
             'extrude': self._gtk.Button("extrude", _("Extrude"), "color4"),
-#           'load': self._gtk.Button("arrow-down", _("Load"), "color3"),
-#           'unload': self._gtk.Button("arrow-up", _("Unload"), "color2"),
+#            'load': self._gtk.Button("arrow-down", _("Load"), "color3"),
+#            'unload': self._gtk.Button("arrow-up", _("Unload"), "color2"),
             'retract': self._gtk.Button("retract", _("Retract"), "color1"),
             'temperature': self._gtk.Button("heat-up", _("Temperature"), "color4"),
             'spoolman': self._gtk.Button("spoolman", "Spoolman", "color3"),
-#           'pressure': self._gtk.Button("settings", _("Pressure Advance"), "color2"),
+#            'pressure': self._gtk.Button("settings", _("Pressure Advance"), "color2"),
             'retraction': self._gtk.Button("settings", _("Retraction"), "color1")
         }
         self.buttons['extrude'].connect("clicked", self.check_min_temp, "extrude", "+")
